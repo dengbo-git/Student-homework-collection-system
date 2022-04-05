@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+</head>
+<link rel="stylesheet" href="css/denglu.css"/>
+<body>
+<div class="head">
+    <div class="begin">欢迎注册</div>
+    姓名：<input type="text" id ="username"><br>
+    性别：<input type="radio" name="sex" value="1">男&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="sex" value="0">女<br>
+    学号：<input type="text" id="personId"><br>
+    <button id="btn">点击注册</button>
+</div>
+<p align="center"><video id="video" autoplay style="width: 500px;height: 500px"></video></p>
+
+<canvas id="canvas" width="500" height="500"></canvas>
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+<script>
+    //1.先获取当前摄像头对象(浏览器---视频流)
+    var video = document.getElementById("video");
+    var button = document.getElementById("btn");
+    //2.判断本地视频流
+    if(navigator.mediaDevices.getUserMedia||navigator.webkitGetUserMedia||navigator.mozGetUserMedia||navigator.getUserMedia){
+        //调用媒体设备
+        getUserMediaToPhoto({
+            video:{
+                width:500,
+                height:500
+            }
+        },success,error);
+    }else{
+        alert("当前设备不支持访问");
+    }
+    function success(stream){
+        var CompatibleURL = window.URL|| window.webkitURL;
+        try{
+            video.src= CompatibleURL.createObjectURL(stream);
+        }catch(e){
+            video.srcObject = stream;
+        }
+        video.play();
+    }
+    function getUserMediaToPhoto(constraints,success,error){//将摄像头转换为视频流
+        if(navigator.mediaDevices.getUserMeida){
+            navigator.mediaDevices.getUserMeida(constraints).then(success).error(error);
+        }else if(navigator.webkitGetUserMedia){
+            navigator.webkitGetUserMedia(constraints,success,error);
+        }else if(navigator.mozGetUserMedia){
+            navigator.navigator.getUserMedia(constraints,success,error);
+        }else{
+            navigator.getUserMeia(constraints,success,error);
+        }
+    }
+    function error(){
+        alert("无法访问设备");
+    }
+    var canvas = document.getElementById("canvas");
+    var contxext = canvas.getContext("2d");
+    button.onclick =function(){
+        if(document.getElementById("username").value==""||document.getElementById("personId").value==""||(!document.getElementsByName("sex")[0].checked&&!document.getElementsByName("sex")[1].checked)){
+            alert("请补全信息哦！")
+        }
+        else {
+            var zz=/[0-9]{10}/;
+            var oklenth=zz.test(document.getElementById("personId").value)
+            var num=Number(document.getElementById("personId").value)
+            var okrange=2017000000<num&&num<2021999999;
+            if(oklenth&&okrange){
+                sumbitFile();
+            }
+            else {
+                alert("你确定你的学号是黑科技的学生？");
+            }
+
+        }
+    }
+    sumbitFile=function(){
+        contxext.drawImage(video,0,0,500,500);
+        var image = canvas.toDataURL("image/png");
+        var img = new Image();
+        img.src = image;
+        document.body.appendChild(img);
+        console.log(image);
+        var sex;
+        let inputs = document.getElementsByName("sex");
+        for (var i = 0; i < inputs .length; i++) {
+            if (inputs [i].checked) {
+                sex=inputs[i].value;
+            }
+        }
+        $.ajax({
+            type:"post",
+            url:"registServlet",
+            dataType:"json",
+            data:{
+                "username":document.getElementById("username").value,
+                "gender":sex,
+                "personId":document.getElementById("personId").value,
+                "fromData":"user",
+                "faceImage":image,
+            },
+            success:function (resp) {
+                if (resp.flag==1){
+                    alert("人脸未录入或网络较差！请重试");
+                }
+                else if(resp.flag==2){
+                    alert("用户已存在");
+                }
+                else if(resp.flag==4){
+                    alert("注册通道已关闭");
+                }
+                else {
+                    alert("注册成功！")
+                    window.location.href="index.html";
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>作业管理系统</title>
+</head>
+<link rel="stylesheet" href="css/denglu.css"/>
+<body>
+<div class="head">
+    <div class="begin">欢迎</div>
+    <div class="input">
+        <form id="d1">
+            姓名：<input type="text" name ="username"><br>
+            性别：<input type="number" name="gender"><br>
+            编号: <input type="text" name="personId"><br>
+        </form>
+        <button class="anniu" id="an" >登录</button>
+        <div class="ff">
+            <a href="regist.html"  >新用户注册</a>
+            <a href="index.html" style="margin-left: 10%;" >忘记密码</a>
+        </div>
+    </div>
+</div>
+
+<p align="right"><video id="video" autoplay style="width: 500px;height: 500px "></video></p><br>
+<button id="btn" style="float: right; margin-right: 50%;">点击验证</button>
+<canvas id="canvas" width="500" height="500"></canvas>
+<script>
+    //1.先获取当前摄像头对象(浏览器---视频流)
+    var video = document.getElementById("video");
+    var button = document.getElementById("btn");
+    //2.判断本地视频流
+    if(navigator.mediaDevices.getUserMedia||navigator.webkitGetUserMedia||navigator.mozGetUserMedia||navigator.getUserMedia){
+        //调用媒体设备
+        getUserMediaToPhoto({
+            video:{
+                width:500,
+                height:500
+            }
+        },success,error);
+    }else{
+        alert("当前设备不支持访问");
+    }
+    function success(stream){
+        var CompatibleURL = window.URL|| window.webkitURL;
+        try{
+            video.src= CompatibleURL.createObjectURL(stream);
+        }catch(e){
+            video.srcObject = stream;
+        }
+        video.play();
+    }
+    function getUserMediaToPhoto(constraints,success,error){//将摄像头转换为视频流
+        if(navigator.mediaDevices.getUserMeida){
+            navigator.mediaDevices.getUserMeida(constraints).then(success).error(error);
+        }else if(navigator.webkitGetUserMedia){
+            navigator.webkitGetUserMedia(constraints,success,error);
+        }else if(navigator.mozGetUserMedia){
+            navigator.navigator.getUserMedia(constraints,success,error);
+        }else{
+            navigator.getUserMeia(constraints,success,error);
+        }
+    }
+    function error(){
+        alert("无法访问设备");
+    }
+    var canvas = document.getElementById("canvas");
+    var contxext = canvas.getContext("2d");
+</script>
+<script>
+    $("#btn").click(function () {
+        contxext.drawImage(video, 0, 0, 500, 500);
+        var image = canvas.toDataURL("image/png");
+        var img = new Image();
+        img.src = image;
+        var dataObj=$("#d1").serialize();
+        document.body.appendChild(img);
+        console.log(image);
+        $.ajax({
+
+            type: "post",
+            url: "dengluServlet",
+            dataType: "json",
+            data: {
+                dataObj
+            },
+            success: function (resp) {
+                if (resp.flag) {
+                    window.location.href = "";
+                } else {
+                    window.location.href = "";
+                }
+            }
+        });
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>设置向导</title>
+    <style>
+        /* 本代码色系灵感来源于黑科技主楼墙体 */
+
+        div {
+            background-color: #ce8c56;
+            border: solid 2px #778085;
+            font-size: 20px;
+            width: 350px;
+            margin: auto;
+            margin-top: 13%;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        body {
+
+            background-color: #f1ddaa;
+        }
+
+
+        .ins {
+            background-color: #fcebbc;
+        }
+
+        .sub {
+            background-color: rgb(255, 230, 181);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <table align="center">
+        <form action="wrs" method="post" onsubmit="return checksubmit()">
+            <tr>
+                <td>数据库地址：</td>
+                <td><input name="ip" value="localhost" id="ip" class="ins"></td>
+            </tr>
+            <tr>
+                <td>数据库端口号：</td>
+                <td><input type="text" name="dkh" id="dkh" value="3306" class="ins"></td>
+            </tr>
+            <tr>
+                <td>数据库名称：</td>
+                <td><input type="text" name="sqlname" id="sqlname" class="ins"></td>
+            </tr>
+            <tr>
+                <td>数据库账号：</td>
+                <td><input type="text" name="accountnum" id="accountnum" class="ins"></td>
+            </tr>
+            <tr>
+                <td>数据库密码：</td>
+                <td><input type="password" name="sqlcode" placeholder="区分大小写" id="sqlcode" class="ins"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="reset" value="&nbsp;重置&nbsp;">
+                    <input class="sub" type="submit" value="&nbsp;提交&nbsp;" id="btn">
+                </td>
+            </tr>
+        </form>
+    </table>
+</div>
+</body>
+<script>
+    window.onload = function () {
+        checksubmit = function () {
+            var ip = document.getElementById("ip").value;
+            var sqlname = document.getElementById("sqlname").value;
+            var accountnum = document.getElementById("accountnum").value;
+            var sqlcode = document.getElementById("sqlcode").value;
+            var ipzz = /^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/;
+            if (ip == "" || sqlname == "" || accountnum == "" || sqlcode == "") {
+                alert("请补全您的数据库信息呐");
+                return false;
+            }
+            else if (ipzz.test(ip) || ip == "localhost") {
+
+                return true;
+            }
+            else {
+                alert("数据库ip地址不合法，请重新设置。");
+                return false;
+            }
+        }
+    }
+</script>
+
+</html>
