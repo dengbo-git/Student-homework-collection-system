@@ -12,14 +12,14 @@ public class FaceService {
 
     private final String ID = "";
     private final String KEY = "";
-    private final String GroupId = "";
+    private final String GROUPID = "";
 
     //人脸操作的业务
     public String createPersonFace(String imageBase64,Long gender,String personName,String personId){
         Credential credential = new Credential(ID,KEY);
         IaiClient iaiClient = new IaiClient(credential,"ap-beijing");
         CreatePersonRequest request = new CreatePersonRequest();
-        request.setGroupId(GroupId);
+        request.setGroupId(GROUPID);
         request.setGender(gender);
         request.setPersonName(personName);
         request.setPersonId(personId);
